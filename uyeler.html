@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMNX - Üyeler</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-layout { display: flex; min-height: calc(100vh - 70px); }
+        .admin-sidebar { width: 260px; background-color: #161b22; border-right: 1px solid #30363d; padding: 20px 0; display: flex; flex-direction: column; }
+        .admin-sidebar h3 { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px 20px; }
+        .admin-menu-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .admin-menu-item a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #c9d1d9; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: 0.2s; border-left: 3px solid transparent; }
+        .admin-menu-item a:hover, .admin-menu-item a.active { background-color: #21262d; color: #58a6ff; border-left-color: #3b82f6; }
+        .admin-content { flex: 1; padding: 30px; background-color: #0d1117; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-pill-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="brand-texts"><h2>CMNX</h2><span>ÜYE YÖNETİMİ</span></div>
+            </a>
+            <div class="nav-right-actions"><a href="admin.html" class="btn-login-nav"><i class="fa-solid fa-arrow-left"></i> Panele Dön</a></div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h3>Yönetim Paneli</h3>
+            <ul class="admin-menu-list">
+                <li class="admin-menu-item"><a href="admin.html"><i class="fa-solid fa-gauge"></i> Kontrol Paneli</a></li>
+                <li class="admin-menu-item"><a href="uyeler.html" class="active"><i class="fa-solid fa-users"></i> Üyeler</a></li>
+                <li class="admin-menu-item"><a href="ilanlar.html"><i class="fa-solid fa-bullhorn"></i> İlanlar</a></li>
+                <li class="admin-menu-item"><a href="keyler.html"><i class="fa-solid fa-key"></i> Keyler</a></li>
+                <li class="admin-menu-item"><a href="kutup.html"><i class="fa-solid fa-box-archive"></i> Kütüphaneler</a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <h1 class="page-title"><i class="fa-solid fa-users"></i> Kayıtlı Üyeler</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Platforma kayıt olan tüm kullanıcıların listesi:</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kullanıcı Adı</th>
+                        <th>E-posta</th>
+                        <th>Kayıt Durumu</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="adminUsersTable">
+                    <!-- JS ile dolacak -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <footer><p>&copy; 2026 CMNX Platform. Tüm hakları saklıdır.</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let users = JSON.parse(localStorage.getItem('cmnx_users')) || [];
+            const table = document.getElementById('adminUsersTable');
+            if (users.length === 0) {
+                table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#8b949e;">Henüz kayıtlı üye bulunmuyor.</td></tr>`;
+                return;
+            }
+            table.innerHTML = users.map((u, i) => `
+                <tr>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td><span style="color:#10b981;">Aktif</span></td>
+                    <td><button class="btn-danger" onclick="deleteUser(${i})">Sil</button></td>
+                </tr>
+            `).join('');
+        });
+
+        window.deleteUser = function(i) {
+            let users = JSON.parse(localStorage.getItem('cmnx_users')) || [];
+            users.splice(i, 1);
+            localStorage.setItem('cmnx_users', JSON.stringify(users));
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMNX - İlanlar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-layout { display: flex; min-height: calc(100vh - 70px); }
+        .admin-sidebar { width: 260px; background-color: #161b22; border-right: 1px solid #30363d; padding: 20px 0; display: flex; flex-direction: column; }
+        .admin-sidebar h3 { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px 20px; }
+        .admin-menu-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .admin-menu-item a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #c9d1d9; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: 0.2s; border-left: 3px solid transparent; }
+        .admin-menu-item a:hover, .admin-menu-item a.active { background-color: #21262d; color: #58a6ff; border-left-color: #3b82f6; }
+        .admin-content { flex: 1; padding: 30px; background-color: #0d1117; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-pill-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="brand-texts"><h2>CMNX</h2><span>İLAN YÖNETİMİ</span></div>
+            </a>
+            <div class="nav-right-actions"><a href="admin.html" class="btn-login-nav"><i class="fa-solid fa-arrow-left"></i> Panele Dön</a></div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h3>Yönetim Paneli</h3>
+            <ul class="admin-menu-list">
+                <li class="admin-menu-item"><a href="admin.html"><i class="fa-solid fa-gauge"></i> Kontrol Paneli</a></li>
+                <li class="admin-menu-item"><a href="uyeler.html"><i class="fa-solid fa-users"></i> Üyeler</a></li>
+                <li class="admin-menu-item"><a href="ilanlar.html" class="active"><i class="fa-solid fa-bullhorn"></i> İlanlar</a></li>
+                <li class="admin-menu-item"><a href="keyler.html"><i class="fa-solid fa-key"></i> Keyler</a></li>
+                <li class="admin-menu-item"><a href="kutup.html"><i class="fa-solid fa-box-archive"></i> Kütüphaneler</a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <h1 class="page-title"><i class="fa-solid fa-bullhorn"></i> İlan Ekle & Yönet</h1>
+            
+            <div class="form-container" style="max-width: 100%; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 1.2rem; color: #38bdf8;">Yeni İlan / Duyuru Oluştur</h3>
+                <form id="addAdForm">
+                    <div class="form-group">
+                        <label>İlan Başlığı</label>
+                        <input type="text" id="adTitle" placeholder="Örn: Hafta Sonu Özel İndirimi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>İlan İçeriği / Açıklama</label>
+                        <textarea id="adDesc" placeholder="İlan detaylarını buraya yazın..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Görsel Bağlantısı (URL)</label>
+                        <input type="url" id="adImg" placeholder="https://ornek.com/gorsel.jpg" required>
+                    </div>
+                    <button type="submit" class="btn-primary">İlanı Yayınla</button>
+                </form>
+            </div>
+
+            <h2 style="font-size: 1.4rem; margin-bottom: 1rem;">Aktif İlanlar</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Görsel</th>
+                        <th>Başlık</th>
+                        <th>Açıklama</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="adminAdsTable">
+                    <!-- JS ile dolacak -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <footer><p>&copy; 2026 CMNX Platform. Tüm hakları saklıdır.</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('cmnx_ads')) {
+                localStorage.setItem('cmnx_ads', JSON.stringify([]));
+            }
+            renderAds();
+
+            const form = document.getElementById('addAdForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('adTitle').value;
+                const desc = document.getElementById('adDesc').value;
+                const img = document.getElementById('adImg').value;
+
+                let ads = JSON.parse(localStorage.getItem('cmnx_ads')) || [];
+                ads.push({ title, desc, img });
+                localStorage.setItem('cmnx_ads', JSON.stringify(ads));
+
+                alert("İlan başarıyla yayınlandı!");
+                form.reset();
+                renderAds();
+            });
+        });
+
+        function renderAds() {
+            let ads = JSON.parse(localStorage.getItem('cmnx_ads')) || [];
+            const table = document.getElementById('adminAdsTable');
+            if (ads.length === 0) {
+                table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#8b949e;">Henüz aktif ilan bulunmuyor.</td></tr>`;
+                return;
+            }
+            table.innerHTML = ads.map((ad, i) => `
+                <tr>
+                    <td><img src="${ad.img}" style="width:60px; height:40px; object-fit:cover; border-radius:4px;" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400'"></td>
+                    <td><b>${ad.title}</b></td>
+                    <td>${ad.desc}</td>
+                    <td><button class="btn-danger" onclick="deleteAd(${i})Kaldır">Kaldır</button></td>
+                </tr>
+            `).join('');
+        }
+
+        window.deleteAd = function(i) {
+            let ads = JSON.parse(localStorage.getItem('cmnx_ads')) || [];
+            ads.splice(i, 1);
+            localStorage.setItem('cmnx_ads', JSON.stringify(ads));
+            renderAds();
+        }
+    </script>
+</body>
+</html>

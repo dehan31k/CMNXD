@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMNX - Key Kullan</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="nav-pill-container">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="brand-texts">
+                    <h2>cmnx</h2>
+                    <span>Güvenli Oyun Erişimi</span>
+                </div>
+            </a>
+            <div class="nav-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" placeholder="Oyun, platform veya paket ara...">
+            </div>
+            <nav class="nav-links-wrapper">
+                <a href="index.html">Mağaza / Ana Sayfa</a>
+                <a href="free-games.html">Ücretsiz Oyun</a>
+                <a href="kutuphane.html">Kütüphane</a>
+                <a href="kullan.html" class="active">Key Kullan</a>
+                <a href="istek.html">İstek Listesi</a>
+            </nav>
+            <div class="nav-right-actions" id="navRightActions">
+                <a href="istek.html" class="nav-icon-btn" title="İstek Listesi"><i class="fa-solid fa-cart-shopping"></i></a>
+                <a href="giris.html" class="btn-login-nav"><i class="fa-solid fa-right-to-bracket"></i> Giriş Yap</a>
+                <a href="kayit.html" class="btn-register-nav"><i class="fa-solid fa-user-plus"></i> Kayıt Ol</a>
+            </div>
+            <div class="hamburger"><i class="fa-solid fa-bars"></i></div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero-section">
+            <h1>Oyun Kodunu Aktive Et</h1>
+            <p>Sahip olduğun özel anahtarı girerek oyununu veya paketini kütüphanene anında ekle.</p>
+            <div class="code-box-wrapper">
+                <div class="code-input-group">
+                    <input type="text" id="activationCode" placeholder="Örn: CMNX-GAME-2026-X1">
+                    <button id="activateBtn">Kodu Aktive Et</button>
+                </div>
+                <div id="messageArea" class="message-area"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CMNX Platform. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

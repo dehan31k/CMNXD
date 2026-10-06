@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMNX - Keyler</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-layout { display: flex; min-height: calc(100vh - 70px); }
+        .admin-sidebar { width: 260px; background-color: #161b22; border-right: 1px solid #30363d; padding: 20px 0; display: flex; flex-direction: column; }
+        .admin-sidebar h3 { color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px 20px; }
+        .admin-menu-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .admin-menu-item a { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #c9d1d9; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: 0.2s; border-left: 3px solid transparent; }
+        .admin-menu-item a:hover, .admin-menu-item a.active { background-color: #21262d; color: #58a6ff; border-left-color: #3b82f6; }
+        .admin-content { flex: 1; padding: 30px; background-color: #0d1117; overflow-y: auto; }
+        .gift-inputs-container { background: var(--bg-color); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .gift-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .gift-row input { flex: 1; padding: 8px 12px; background: #161b22; border: 1px solid #30363d; border-radius: 6px; color: white; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-pill-container" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <a href="index.html" class="nav-brand">
+                <div class="brand-icon"><i class="fa-solid fa-gamepad"></i></div>
+                <div class="brand-texts"><h2>CMNX</h2><span>KEY YÖNETİMİ</span></div>
+            </a>
+            <div class="nav-right-actions"><a href="admin.html" class="btn-login-nav"><i class="fa-solid fa-arrow-left"></i> Panele Dön</a></div>
+        </div>
+    </header>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <h3>Yönetim Paneli</h3>
+            <ul class="admin-menu-list">
+                <li class="admin-menu-item"><a href="admin.html"><i class="fa-solid fa-gauge"></i> Kontrol Paneli</a></li>
+                <li class="admin-menu-item"><a href="uyeler.html"><i class="fa-solid fa-users"></i> Üyeler</a></li>
+                <li class="admin-menu-item"><a href="ilanlar.html"><i class="fa-solid fa-bullhorn"></i> İlanlar</a></li>
+                <li class="admin-menu-item"><a href="keyler.html" class="active"><i class="fa-solid fa-key"></i> Keyler</a></li>
+                <li class="admin-menu-item"><a href="kutup.html"><i class="fa-solid fa-box-archive"></i> Kütüphaneler</a></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content">
+            <h1 class="page-title"><i class="fa-solid fa-key"></i> Key Oluştur & Yönet</h1>
+            
+            <!-- Yeni Key / Kod Oluşturma Formu -->
+            <div class="form-container" style="max-width: 100%; margin-bottom: 30px;">
+                <h3 style="margin-bottom: 1.2rem; color: #38bdf8;">Yeni Key ve Hediye Tanımla</h3>
+                <form id="addCodeForm">
+                    <div class="form-group">
+                        <label>Key / Kod</label>
+                        <input type="text" id="newCodeText" placeholder="Örn: CMNX-GAME-2026-X1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Oyun / Paket Başlığı</label>
+                        <input type="text" id="newCodeTitle" placeholder="Örn: Cyberpunk Epic Pack" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tür</label>
+                        <input type="text" id="newCodeType" placeholder="Örn: Oyun, Abonelik, Cüzdan" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Hediyeler (İsteğe Bağlı Seçenekler)</label>
+                        <div id="giftInputsWrapper" class="gift-inputs-container">
+                            <div class="gift-row">
+                                <input type="text" placeholder="1. Hediye Adı" class="gift-title-input">
+                                <input type="text" placeholder="Hediye Açıklaması" class="gift-desc-input">
+                            </div>
+                        </div>
+                        <button type="button" id="addMoreGiftBtn" class="btn-secondary" style="background:#21262d; color:#c9d1d9; border:1px solid #30363d; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem; margin-top:5px;"><i class="fa-solid fa-plus"></i> Yeni Hediye Seçeneği Ekle</button>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 15px;">Key'i ve Hediyeleri Kaydet</button>
+                </form>
+            </div>
+
+            <!-- Mevcut Keyler Tablosu -->
+            <h2 style="font-size: 1.4rem; margin-bottom: 1rem;">Aktif Keyler Listesi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kod</th>
+                        <th>Başlık</th>
+                        <th>Tür</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
+                <tbody id="adminCodesTable">
+                    <!-- JS ile dolacak -->
+                </tbody>
+            </table>
+        </main>
+    </div>
+
+    <footer><p>&copy; 2026 CMNX Platform. Tüm hakları saklıdır.</p></footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAdminCodes();
+
+            // Hediye Ekleme Satırı Artı Butonu
+            const addMoreGiftBtn = document.getElementById('addMoreGiftBtn');
+            if (addMoreGiftBtn) {
+                addMoreGiftBtn.addEventListener('click', () => {
+                    const wrapper = document.getElementById('giftInputsWrapper');
+                    const count = wrapper.querySelectorAll('.gift-row').length + 1;
+                    const newRow = document.createElement('div');
+                    newRow.className = 'gift-row';
+                    newRow.innerHTML = `
+                        <input type="text" placeholder="${count}. Hediye Adı" class="gift-title-input">
+                        <input type="text" placeholder="Hediye Açıklaması" class="gift-desc-input">
+                    `;
+                    wrapper.appendChild(newRow);
+                });
+            }
+
+            // Key Ekleme Form Gönderimi
+            const addCodeForm = document.getElementById('addCodeForm');
+            if (addCodeForm) {
+                addCodeForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const code = document.getElementById('newCodeText').value.trim();
+                    const title = document.getElementById('newCodeTitle').value.trim();
+                    const type = document.getElementById('newCodeType').value.trim();
+
+                    let gifts = [];
+                    const giftRows = document.querySelectorAll('.gift-row');
+                    giftRows.forEach(row => {
+                        const gTitle = row.querySelector('.gift-title-input').value.trim();
+                        const gDesc = row.querySelector('.gift-desc-input').value.trim();
+                        if (gTitle) {
+                            gifts.push({ title: gTitle, desc: gDesc || "Açıklama belirtilmedi." });
+                        }
+                    });
+
+                    let codes = JSON.parse(localStorage.getItem('cmnx_codes')) || [];
+                    codes.push({ code, title, type, gifts });
+                    localStorage.setItem('cmnx_codes', JSON.stringify(codes));
+
+                    alert("Key başarıyla oluşturuldu ve kaydedildi!");
+                    addCodeForm.reset();
+                    renderAdminCodes();
+                });
+            }
+        });
+
+        function renderAdminCodes() {
+            let codes = JSON.parse(localStorage.getItem('cmnx_codes')) || [];
+            const table = document.getElementById('adminCodesTable');
+            if (codes.length === 0) {
+                table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#8b949e;">Sistemde kayıtlı aktif key bulunmuyor.</td></tr>`;
+                return;
+            }
+            table.innerHTML = codes.map((c, index) => `
+                <tr>
+                    <td><code>${c.code}</code></td>
+                    <td><b>${c.title}</b></td>
+                    <td>${c.type}</td>
+                    <td><button class="btn-danger" onclick="deleteCode(${index})">Sil</button></td>
+                </tr>
+            `).join('');
+        }
+
+        window.deleteCode = function(index) {
+            let codes = JSON.parse(localStorage.getItem('cmnx_codes')) || [];
+            codes.splice(index, 1);
+            localStorage.setItem('cmnx_codes', JSON.stringify(codes));
+            renderAdminCodes();
+        }
+    </script>
+</body>
+</html>
