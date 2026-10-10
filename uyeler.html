@@ -41,13 +41,13 @@
 
         <main class="admin-content">
             <h1 class="page-title"><i class="fa-solid fa-users"></i> Kayıtlı Üyeler</h1>
-            <p style="color: var(--text-muted); margin-bottom: 2rem;">Platforma kayıt olan tüm kullanıcıların listesi:</p>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Platforma kayıt olan tüm kullanıcıların isim ve e-posta listesi:</p>
             
             <table>
                 <thead>
                     <tr>
                         <th>Kullanıcı Adı</th>
-                        <th>E-posta</th>
+                        <th>E-posta Adresi</th>
                         <th>Kayıt Durumu</th>
                         <th>İşlem</th>
                     </tr>
@@ -63,27 +63,35 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            renderUsers();
+        });
+
+        function renderUsers() {
             let users = JSON.parse(localStorage.getItem('cmnx_users')) || [];
             const table = document.getElementById('adminUsersTable');
+            
             if (users.length === 0) {
                 table.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#8b949e;">Henüz kayıtlı üye bulunmuyor.</td></tr>`;
                 return;
             }
+
             table.innerHTML = users.map((u, i) => `
                 <tr>
-                    <td>${u.name}</td>
+                    <td><i class="fa-solid fa-user" style="color:#38bdf8; margin-right:8px;"></i><b>${u.name}</b></td>
                     <td>${u.email}</td>
-                    <td><span style="color:#10b981;">Aktif</span></td>
-                    <td><button class="btn-danger" onclick="deleteUser(${i})">Sil</button></td>
+                    <td><span style="color:#10b981; font-weight:600;"><i class="fa-solid fa-circle" style="font-size:8px;"></i> Aktif Üye</span></td>
+                    <td><button class="btn-danger" onclick="deleteUser(${i})">Üyeyi Sil</button></td>
                 </tr>
             `).join('');
-        });
+        }
 
         window.deleteUser = function(i) {
             let users = JSON.parse(localStorage.getItem('cmnx_users')) || [];
-            users.splice(i, 1);
-            localStorage.setItem('cmnx_users', JSON.stringify(users));
-            location.reload();
+            if (confirm("Bu üyeyi silmek istediğinize emin misiniz?")) {
+                users.splice(i, 1);
+                localStorage.setItem('cmnx_users', JSON.stringify(users));
+                renderUsers();
+            }
         }
     </script>
 </body>
